@@ -21,10 +21,7 @@
  *    getIntervalArray(3, 3) => [ 3 ]
  */
 function getIntervalArray(start, end) {
-  return Array.from(
-    { length: Math.abs(end - start) / 1 + 1 },
-    (_, i) => start + i * 1
-  );
+  return Array.from({ length: Math.abs(end - start) + 1 }, (_, i) => start + i);
 }
 
 /**
@@ -41,16 +38,11 @@ function getIntervalArray(start, end) {
  *    sumArrays([-1, 0, 1], [1, 2, 3, 4]) => [0, 2, 4, 4]
  */
 function sumArrays(arr1, arr2) {
-  const result = Array.from(
-    { length: Math.max(arr1.length, arr2.length) },
-    (_, i) => {
-      const firstArrItem = arr1[i] || 0;
-      const secondArrItem = arr2[i] || 0;
-
-      return firstArrItem + secondArrItem;
-    }
-  );
-  return result;
+  return Array.from({ length: Math.max(arr1.length, arr2.length) }, (_, i) => {
+    const a = arr1[i] || 0;
+    const b = arr2[i] || 0;
+    return a + b;
+  });
 }
 
 /**
@@ -131,8 +123,10 @@ function getStringsLength(arr) {
  *   getAverage([ 1, 10, 100, 1000 ])  => 277,75
  *   getAverage([ 2, 3, 3 ])  => 2,67
  */
-function getAverage(/* arr */) {
-  throw new Error('Not implemented');
+function getAverage(arr) {
+  if (arr.length === 0) return 0;
+  const sum = arr.reduce((acc, value) => acc + value, 0);
+  return Math.round((sum / arr.length) * 100) / 100;
 }
 
 /**
@@ -269,8 +263,14 @@ function distinct(arr) {
  *    createNDimensionalArray(4, 2) => [[[[0, 0], [0, 0]], [[0, 0], [0, 0]]], [[[0, 0], [0, 0]], [[0, 0], [0, 0]]]]
  *    createNDimensionalArray(1, 1) => [0]
  */
-function createNDimensionalArray(/* n, size */) {
-  throw new Error('Not implemented');
+function createNDimensionalArray(n, size) {
+  if (n === 0) {
+    return 0;
+  }
+
+  return Array(size)
+    .fill(0)
+    .map(() => createNDimensionalArray(n - 1, size));
 }
 
 /**
@@ -284,8 +284,10 @@ function createNDimensionalArray(/* n, size */) {
  *    flattenArray(['a', ['b', ['c', 'd'], 'e'], 'f']) => ['a', 'b', 'c', 'd', 'e', 'f']
  *    flattenArray([1, 2, 3, 4]) => [1, 2, 3, 4]
  */
-function flattenArray(/* nestedArray */) {
-  throw new Error('Not implemented');
+function flattenArray(nestedArray) {
+  return nestedArray.reduce((acc, item) => {
+    return acc.concat(Array.isArray(item) ? flattenArray(item) : item);
+  }, []);
 }
 
 /**
@@ -301,8 +303,8 @@ function flattenArray(/* nestedArray */) {
  *   selectMany([[1, 2], [3, 4], [5, 6]], (x) => x) =>   [ 1, 2, 3, 4, 5, 6 ]
  *   selectMany(['one','two','three'], (x) => x.split('')) =>   ['o','n','e','t','w','o','t','h','r','e','e']
  */
-function selectMany(/* arr, childrenSelector */) {
-  throw new Error('Not implemented');
+function selectMany(arr, childrenSelector) {
+  return arr.flatMap(childrenSelector);
 }
 
 /**
@@ -319,8 +321,8 @@ function selectMany(/* arr, childrenSelector */) {
  *   calculateBalance([]) => 0
  */
 function calculateBalance(arr) {
-  return arr.reduce(function reduce(accumulator, [a, b]) {
-    return accumulator + a - b;
+  return arr.reduce((acc, [a, b]) => {
+    return acc + a - b;
   }, 0);
 }
 
@@ -336,8 +338,15 @@ function calculateBalance(arr) {
  *    createChunks(['a', 'b', 'c', 'd', 'e'], 2) => [['a', 'b'], ['c', 'd'], ['e']]
  *    createChunks([10, 20, 30, 40, 50], 1) => [[10], [20], [30], [40], [50]]
  */
-function createChunks(/* arr, chunkSize */) {
-  throw new Error('Not implemented');
+function createChunks(arr, chunkSize) {
+  return arr.reduce((acc, el, i) => {
+    if (i % chunkSize === 0) {
+      acc.push([el]);
+    } else {
+      acc[acc.length - 1].push(el);
+    }
+    return acc;
+  }, []);
 }
 
 /**
@@ -386,8 +395,10 @@ function getElementByIndices(/* arr, indices */) {
  *  getFalsyValuesCount([ -1, 'false', null, 0 ]) => 2
  *  getFalsyValuesCount([ null, undefined, NaN, false, 0, '' ]) => 6
  */
-function getFalsyValuesCount(/* arr */) {
-  throw new Error('Not implemented');
+function getFalsyValuesCount(arr) {
+  return arr.reduce((acc, value) => {
+    return !value ? acc + 1 : acc;
+  }, 0);
 }
 
 /**
